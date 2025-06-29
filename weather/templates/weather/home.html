@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Weather - Gujarat Cities</title>
+    <style>
+        body {
+            background: #3498db;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .weather-card {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 16px;
+            width: 220px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .temp {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .desc {
+            font-size: 16px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌦️ Live Weather - Gujarat Cities</h1>
+
+    <div class="card-container" id="weather-container">
+        {% for city, info in weather_data.items %}
+            <div class="weather-card" id="card-{{ city }}">
+                <h2>📍 {{ city }}</h2>
+                <div class="temp" id="temp-{{ city }}">🌡️ {{ info.temperature }} °C</div>
+                <div class="desc" id="desc-{{ city }}">☁️ {{ info.description|title }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function updateWeather() {
+            fetch('/weather-json/')
+            .then(response => response.json())
+            .then(data => {
+                for (const city in data) {
+                    const tempEl = document.getElementById(`temp-${city}`);
+                    const descEl = document.getElementById(`desc-${city}`);
+
+                    if (tempEl && descEl) {
+                        tempEl.innerHTML = `🌡️ ${data[city].temperature} °C`;
+                        descEl.innerHTML = `☁️ ${data[city].description}`;
+                    }
+                }
+            })
+            .catch(error => {
+                console.log("Weather update failed:", error);
+            });
+        }
+
+        // Load once immediately
+        updateWeather();
+
+        // Update every 60 seconds
+        setInterval(updateWeather, 60000);
+    </script>
+</body>
+</html>
