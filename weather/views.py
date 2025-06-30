@@ -7,14 +7,6 @@ import os
 
 # Create your views here.
 
-# def home(request):
-#     data = cache.get('weather_data', {'temperature': 'N/A', 'description': 'N/A'})
-#     print("Data:", data)
-#     return render(request, 'weather/home.html', {'weather': data})
-
-# from django.core.cache import cache
-# from django.shortcuts import render
-
 def home(request):
     data = cache.get('weather_data_all', {})
     return render(request, 'weather/home.html', {'weather_data': data})
